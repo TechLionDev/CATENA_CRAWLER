@@ -79,16 +79,31 @@ function commentaryTextToTextAndSource(text) {
     commentaryText = commentaryText.replace(sourcePattern, '').trim();
   } else {
     // Attempt to extract the source based on context
-    var splitText = commentaryText.split('. ');
+    var splitText = commentaryText.split('.');
+
     if (splitText.length > 1) {
       commentarySource = splitText[splitText.length - 1].trim();
-      if (!isNaN(commentarySource) || commentarySource.includes('St')) {
+
+      if (!isNaN(commentarySource)) {
         commentarySource = splitText[splitText.length - 2].trim() + '.' + commentarySource;
+
+      } else if (commentaryText[commentaryText.length - 4].includes(' St.')) {
+        commentarySource = splitText[splitText.length - 2].trim() + '. ' + commentarySource;
+        commentaryText = commentaryText.replace(commentarySource, '').trim();
+
       } else if (commentarySource.includes('!')) {
-        splitText = commentarySource.split('! ')
-        commentarySource = splitText[splitText.length - 1].trim();
+        splitText = commentarySource.split('!')
+        commentarySource = splitText[splitText.length].trim();
+        commentaryText += splitText[splitText.length - 1].trim();
+      
       }
-    commentaryText = commentaryText.replace(commentarySource, '').trim();
+      commentaryText = commentaryText.replace(commentarySource, '').trim();
+
+      // while (!isNAN(commentarySource.charAt(0))) {
+      //   var number = commentarySource[0];
+      //   commentarySource.replace(number, '').trim();
+      //   commentaryText += number;
+      // }
     }
   }
 
